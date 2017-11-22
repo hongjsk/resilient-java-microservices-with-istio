@@ -1,30 +1,30 @@
 [![Build Status](https://travis-ci.org/IBM/resilient-java-microservices-with-istio.svg?branch=master)](https://travis-ci.org/IBM/resilient-java-microservices-with-istio)
 
-# Enable your Java microservices with advanced resiliency features leveraging Istio 
+# Istio 를 활용하여 Java 애플리케이션의 향상된 장애 복구 기능을 확보하세요 
 
 *다른 언어로 보기: [English](README.md).*
 
-Building and packaging Java microservice is one part of the story. How do we make them resilient? How do we introduce health checks, timeouts, retries, ensure request buffering or reliable communication between microservices? Some of these features are coming built in microservices framework, but often they are language specific, or you have to accomodate for it in your application code. How do we introduce it without changing the application code? Service-mesh architecture attempts to solve these issues. [Istio](https://istio.io) provides an easy way to create this service mesh by deploying a [control plane](https://istio.io/docs/concepts/what-is-istio/overview.html#architecture) and injecting sidecars containers alongside your microservice. 
+Java 마이크로 서비스를 빌드하고 패키지하는 것은 이 이야기의 한 부분입니다. 마이크로 서비스를 어떻게 장애 복구가능하게 만들 수 있을까요? 마이크로 서비스간 헬스 체크(health check), 타임아웃, 재시도, 버퍼링이나 신뢰도 높은 통신을 어떻게 도입할까요? 이에 대한 일부 기능이 마이크로 프레임워크에서 내장될 것이라 하지만, 특정 언어에 국한되어 있거나 이를 애플리케이션 코드에서 처리해야 하는 경우가 많습니다. 애플리케이션 코드의 변경 없이 이와 같은 기능을 도입하려면 어떻게 해야 할까요? 서비스 메쉬(service-mesh) 아키텍쳐가 이와 같은 이슈를 해결하고자 합니다. [Istio](https://istio.io)는 [컨트롤 플레인(control plane)](https://istio.io/docs/concepts/what-is-istio/overview.html#architecture)을 배포하고 대상 마이크로 서비스 옆에 붙는 사이드카(sidecar) 컨테이너를 주입하는 것으로 손쉽게 서비스 메쉬를 생성하게 합니다. 
 
-In this code we demonstrate how to build and deploy your Java [MicroProfile](http://microprofile.io) microservices leveraging Istio service mesh. MicroProfile is a baseline Java platform for a microservices architecture and delivers application portability across multiple MicroProfile runtimes - the initial baseline is JAX-RS plus CDI plus JSON-P. It provides specs for building and pakaging Java microservices in a standardized way. 
+이 코드에는  Istio 서비스 메쉬를 활용한 Java [MicroProfile](http://microprofile.io) 마이크로 서비스에 대한 빌드, 배포하는 방법을 시연합니다. MicroProfile은 마이크로 서비스 아키텍쳐를 위한 기초적인 Java 플랫폼이며 여러 개의 MicroProfile 런타임에 걸친 애플리케이션 이동성을 제공합니다 - 초기 베이스라인은 JAX-RS, CDI 그리고 JSON-P가 더해진 형태입니다. 이는 표준화된 방법으로 Java 마이크로 서비스를 빌드하고 패키지하기 위한 규격을 제공합니다. 
 
-We then show how to configure and use circuit breakers, health checks and timeouts/retries resiliency features for the application.
+그리고 나면, 애플리케이션에 대한 서킷 브레이커 (circuit breaker), 헬스 체크 그리고 타임아웃/재시도 등의 장애 복구 기능을 어떻게 설정하고 사용하는지 보여줍니다.
 
-**Resiliency and fault tolerance**: Istio adds fault tolerance to your application without any changes to code. Some of resiliency features it supports are: 
+**장애 복구 기능 및 내결함성**: Istio는 애플리케이션의 어떠한 코드 변경 없이 내결함성을 추가 합니다. Istio가 지원하는 복원 기능 중 일부는 다음과 같습니다: 
 
- - Retries/Timeouts
- - Circuit breakers
- - Health checks
- - Control connection pool size and request load
- - Systematic fault injection
+ - 재시도/타임아웃(retry/timeout)
+ - 서킷 브레이커(circuit breaker)
+ - 헬스 체크(health check)
+ - 연결 풀(pool) 크기 및 요청 부하(request load) 조정
+ - 시스템적인 실패 주입(fault injection)
 
-We use the sample MicroProfile web application for managing a conference and it is based on a number of discrete microservices. The front end is written in Angular; the backing microservices are in Java. All run on WebSphere Liberty, in Docker containers managed by Kubernetes.
+컨퍼런스 관리를 위한 예제 MicroProfile 웹 애플리케이션은 몇 개의 분리된 마이크로 서비스들로 구성되어 있습니다. 프론드엔드는 Angular로 작성되었고; 백엔드 마이크로 서비스는 Java로 되어 있습니다. 모두 쿠버네티스로 관리되는 Docker 컨테이너의 WebSphere Liberty에서 실행됩니다.
 
-MicroProfile Fault Tolerance, adding application-specific capabilities such as failback functions that can work in conjunction with, or independently from, Istio capabilities will be the subject of a future update.
+MicroProfile 내결함성 즉, Istio 기능과 함께 혹은 독립적으로 동작할 수 있는 failback 함수와 같은 애플리케이션에 특화 기능을 추가하는 것은 향후 업데이트 포함될 예정입니다.
 
 ![MicroProfile-Istio](images/microprofile-istio.png)
 
-## Included Components
+## 포함된 구성 요소
 - [MicroProfile](https://microprofile.io)
 - [Istio](https://istio.io/)
 - [Kubernetes Clusters](https://console.ng.bluemix.net/docs/containers/cs_ov.html#cs_ov)
@@ -32,59 +32,59 @@ MicroProfile Fault Tolerance, adding application-specific capabilities such as f
 - [Bluemix DevOps Toolchain Service](https://console.ng.bluemix.net/catalog/services/continuous-delivery)
 - [WebSphere](https://developer.ibm.com/wasdev/websphere-liberty)
 
-# Prerequisite
-- Create a Kubernetes cluster with either [Minikube](https://kubernetes.io/docs/getting-started-guides/minikube) for local testing, or with [IBM Bluemix Container Service](https://github.com/IBM/container-journey-template) to deploy in the cloud. The code here is regularly tested against [Kubernetes Cluster from Bluemix Container Service](https://console.ng.bluemix.net/docs/containers/cs_ov.html#cs_ov) using Travis.
-- You will also need Istio service mesh installed on top of your Kubernetes cluster. Please follow the instructions, [Istio getting started](https://github.com/IBM/Istio-getting-started), to get Istio mesh installed on Kubernetes.
+# 전제 조건
+- 로컬 테스트를 위해 [Minikube](https://kubernetes.io/docs/getting-started-guides/minikube)를 사용하거나 [IBM Bluemix Container Service](https://github.com/IBM/container-journey-template)를 클라우드에 배치하여 쿠버네티스 클러스터를 생성하십시오. 이곳의 코드는 [Bluemix Container 서비스의 쿠버네티스 클러스터](https://console.ng.bluemix.net/docs/containers/cs_ov.html#cs_ov)에 대해 Travis를 사용하여 정기적으로 테스트됩니다.
+- 또한, 생성한 쿠버네티스 클러스터에 Istio 서비스 메쉬를 설치해야 합니다. 다음 지침을 따라 쿠버네티스에 Istio 서비스 메시를 설치하십시오. [Istio 시작하기 ](https://github.com/IBM/Istio-getting-started).
 
-# Deploy to Bluemix
-If you want to deploy the Java MicroProfile app directly to Bluemix, click on 'Deploy to Bluemix' button below to create a [Bluemix DevOps service toolchain and pipeline](https://console.ng.bluemix.net/docs/services/ContinuousDelivery/toolchains_about.html#toolchains_about) for deploying the sample, else jump to [Steps](#steps)
+# Bluemix에 배포하기
+Java MicroProfile 앱을 Bluemix에 직접 배포하고자 한다면 'Deploy to Bluemix' 버튼을 클릭하여 예제를 위한 [Bluemix DevOps service toolchain and pipeline](https://console.ng.bluemix.net/docs/services/ContinuousDelivery/toolchains_about.html#toolchains_about)를 생성하십시오 그렇지 않으면 다음 [단계](#단계)로 이동하십시오.
 
-> You will need to create your Kubernetes cluster first and make sure it is fully deployed in your Bluemix account.
+> 쿠버네티스 클러스터를 먼저 생성하며, Bluemix 계정에 완전히 배포되어야 합니다.
 
 [![Create Toolchain](https://github.com/IBM/container-journey-template/blob/master/images/button.png)](https://console.ng.bluemix.net/devops/setup/deploy/)
 
-Please follow the [Toolchain instructions](https://github.com/IBM/container-journey-template/blob/master/Toolchain_Instructions_new.md) to complete your toolchain and pipeline.
+툴체인과 파이프 라인을 완료하려면 [Toolchain 지침](https://github.com/IBM/container-journey-template/blob/master/Toolchain_Instructions_new.md)을 따르십시오.
 
-# Steps
+# 단계
 
-## Part A: Building microservices and enabling ingress traffic
+## 파트 A: 마이크로 서비스 빌드와 ingress 트래픽 활성화 하기
 
-1. [Get and build the application code](#1-get-and-build-the-application-code)
-2. [Deploy application microservices and Istio envoys](#2-deploy-application-microservices-and-istio-envoys)
+1. [애플리케이션 코드 확보 및 빌드하기](#1-애플리케이션-코드-확보-및-빌드하기)
+2. [애플리케이션 마이크로 서비스와 Istio envoy 배포하기](#2-애플리케이션-마이크로-서비스와-istio-envoy-배포하기)
 
-## Part B: Explore Istio resiliency features: Circuit Breakers and Fault Injection
+## 파트 B: Istio 회복 기능 알아보기: 서킷 브레이커와 실패 주입
 
-3. [Circuit Breakers - Maximum connections and pending requests](#3-circuit-breakers---maximum-connections-and-pending-requests)
-4. [Circuit Breakers - Load balancing pool ejection](#4-circuit-breakers---load-balancing-pool-ejection)
-5. [Timeouts and Retries](#5-timeouts-and-retries)
+3. [서킷 브레이커 - 연결 및 요청 보류에 대한 최대 값](#3-서킷-브레이커---연결-및-요청-보류에-대한-최대-값)
+4. [서킷 브레이커 - 부하 분산 풀 방출](#4-서킷-브레이커---부하-분산-풀-방출)
+5. [타임아웃과 재시도](#5-타임아웃과 재시도)
 
-#### [Troubleshooting](#troubleshooting-1)
+#### [문제 해결](#문제-해결)
 
 
-## Part A: Building microservices and enabling ingress traffic
-## 1. Get and build the application code
+## 파트 A: 마이크로 서비스 빌드와 ingress 트래픽 활성화 하기
+## 1. 애플리케이션 코드 확보 및 빌드하기
 
-> If you don't want to build your own images, you can use our default images and move on to [Step 2](#2-deploy-application-microservices-and-istio-envoys).
+> 고유한 이미지 빌드를 원하지 않는다면 기본으로 제공하는 이미지를 사용 할 수 있습니다. [단계 2](#2-애플리케이션-마이크로-서비스와-istio-envoy-배포하기)로 진행하십시오.
 
-Before you proceed to the following instructions, make sure you have [Maven](https://maven.apache.org/install.html) and [Docker](https://www.docker.com/community-edition#/download) installed on your machine.
+아래 지침을 수행하기 전에, [Maven](https://maven.apache.org/install.html)과 [Docker](https://www.docker.com/community-edition#/download)가 여러분 머신에 설치되어 있어야 합니다.
 
-First, clone and get in our repository to obtain the necessary yaml files and scripts for downloading and building your applications and microservices.
+먼저, 이 저장소를 복제하여 애플리케이션과 마이크로 서비스의 다운로드 및 빌드에 필요한 필수 yaml 파일 및 스크립드를 얻습니다.
 
 ```shell
 git clone https://github.com/IBM/resilient-java-microservices-with-istio.git 
 cd resilient-java-microservices-with-istio
 ```
 
-Now, make sure you login to Docker first before you proceed to the following step.
+지금, 아래 단계를 진행하기 전에 먼저 Docker에 로그인 하십시오.
 
-> **Note:** For the following steps, you can get the code and build the package by running 
+> **참고:** 이어지는 단계에서, 아래 명령을 실행하여 코드를 얻고 빌드 할 수 있습니다 
 > ```shell
 > ./scripts/get_code_linux.sh [docker username] #For Linux users
 > ./scripts/get_code_osx.sh [docker username] #For Mac users
 > ```
->Then, you can move on to [Step 2](#2-deploy-application-microservices-and-istio-envoys).
+>그러면, [단계 2](#2-deploy-application-microservices-and-istio-envoys)로 진행 할 수 있습니다.
 
-  `git clone` and `mvn clean package` the following projects:
+  아래 프로젝트에 대해 `git clone` 과 `mvn clean package` 를 실행합니다:
    * [Web-App](https://github.com/WASdev/sample.microservicebuilder.web-app)
    ```shell
       git clone https://github.com/WASdev/sample.microservicebuilder.web-app.git
@@ -105,54 +105,54 @@ Now, make sure you login to Docker first before you proceed to the following ste
    ```shell
       git clone https://github.com/WASdev/sample.microservicebuilder.vote.git
   ```
-* `mvn clean package` in each ../sample.microservicebuilder.* projects
+* 각각의 ../sample.microservicebuilder.* 프로젝트에서 `mvn clean package` 를 실행합니다.
 
-Now, use the following commands to build the microservice containers.
+이제, 아래 명령들을 사용하여 마이크로 서비스 컨테이너를 빌드합니다.
 
-Build the web-app microservice container
+web-app 마이크로 서비스 컨테이너 빌드하기
 
 ```shell
 docker build -t <docker_username>/microservice-webapp sample.microservicebuilder.web-app
 docker push <docker_username>/microservice-webapp
 ```
 
-Build the schedule microservice container
+schedule 마이크로 서비스 컨테이너 빌드하기
 
 ```shell
 docker build -t <docker_username>/microservice-schedule sample.microservicebuilder.schedule
 docker push <docker_username>/microservice-schedule
 ```
 
-Build the speaker microservice container
+speaker 마이크로 서비스 컨테이너 빌드하기
 
 ```shell
 docker build -t <docker_username>/microservice-speaker sample.microservicebuilder.speaker
 docker push <docker_username>/microservice-speaker
 ```
 
-Build the session microservice container
+session 마이크로 서비스 컨테이너 빌드하기
 
 ```shell
 docker build -t <docker_username>/microservice-session sample.microservicebuilder.session
 docker push <docker_username>/microservice-session
 ```
 
-Build the vote microservice container
+vote 마이크로 서비스 컨테이너 빌드하기
 
 ```shell
 docker build -t <docker_username>/microservice-vote-cloudant sample.microservicebuilder.vote
 docker push <docker_username>/microservice-vote-cloudant
 ```
 
-## 2. Deploy application microservices and Istio envoys
+## 2. 애플리케이션 마이크로 서비스와 Istio envoy 배포하기
 
 
-The great thing about Istio is you can deploy you application on Istio without changing any of your files. However, the original MicroProfile example is built on top of the Fabric (an extra infrastructure services on top of Kubernetes). Therefore, you need to deploy the application with the yaml files in this repository.
+Istio에 관한 훌륭한 기능은 애플리케이션 파일 변경 없이 Istio에 배포 할 수 있다는 점입니다. 그러나, 원본 MicroProfile은 Fabric(쿠버네티스 위에 놓이 추가적인 인프라 서비스)에 구축된 예제이므로, 이 저장소에 있는 yaml 파일로 배포해야만 합니다.
 
-Before you proceed to the following steps, change the `journeycode` in your yaml files to your own docker username if you want to use your own docker images.
->Note: If you ran the **get_code** script, your docker username is already changed in your yaml files.
+아래 단계를 진행하기 전에, 여러분 고유한 docker 이미지를 사용하고자 한다면 yaml 파일에 `journeycode` 를 고유한 docker username으로 변경해야 합니다.
+>참고: **get_code** 스크립트를 실행했다면, yaml 파일에 docker username이 이미 변경되었을 겁니다.
 
-Envoys are deployed as sidecars on each microservice. Injecting Envoy into your microservice means that the Envoy sidecar would manage the ingoing and outgoing calls for the service. To inject an Envoy sidecar to an existing microservice configuration, do:
+Envoy는 각 마이크로서비스에 사이드카로 배치됩니다. Envoy를 마이크로서비스에 주입한다는 것은 Envoy 사이드카가 서비스에 대한 들어오고 나가는 연결을 관리한다는 것을 의미합니다. 기존 마이크로서비스 구성에 Envoy 사이드카를 주입하려면 다음과 같이 하십시오:
 ```shell
 kubectl apply -f manifests/deploy-job.yaml #Create a secret for cloudant credential
 kubectl apply -f <(istioctl kube-inject -f manifests/deploy-schedule.yaml)
@@ -163,7 +163,7 @@ kubectl apply -f <(istioctl kube-inject -f manifests/deploy-vote.yaml)
 kubectl apply -f <(istioctl kube-inject -f manifests/deploy-webapp.yaml)
 ```
 
-After a few minutes, you should now have your Kubernetes Pods running and have an Envoy sidecar in each of them alongside the microservice. The microservices are **schedule, session, speaker, vote-v1, vote-v2, cloudant, and webapp**. 
+몇 분 후, 쿠버네티스 Pod의 마이크로서비스 옆에서 실행되는 각자의 Envoy 사이드카를 볼 수 있게 됩니다. 해당 마이크로서비스는 **schedule, session, speaker, vote-v1, vote-v2, cloudant, 및 webapp** 입니다. 
 ```shell
 $ kubectl get pods
 NAME                                           READY     STATUS      RESTARTS   AGE
@@ -179,36 +179,38 @@ microservice-vote-sample-3728755778-5c4vx      2/2       Running     0          
 microservice-webapp-sample-3875068375-bvp87    2/2       Running     0          2d   
 ```
 
-To access your application, you want to create an ingress to connect all the microservices and access it via istio ingress. Thus, do:
+애플리케이션에 접근하기위해, 모든 마이크로 서비스로 연결하는 ingress를 생성하고 istio ingress를 통해 접근하길 원할 것입니다. 그래서, 다음과 같이 하십시오:
 
 ```shell
 kubectl create -f manifests/ingress.yaml
 ```
 
-You can check the public IP address of your cluster through `bx cs workers <your_cluster_name>` and get the NodePort of the istio-ingress service for port 80 through `kubectl get svc | grep istio-ingress`. Or you can also run the following command to output the IP address and NodePort:
+`bx cs workers <your_cluster_name>`을 통해 클러스터의 공용 IP 주소를 확인하고 `kubectl get svc | grep istio-ingress`으로 포트 80에 대한 istio-ingress 서비스의 NodePort를 얻을 수 있습니다. 아니면 다음 명령을 실행하여 IP 주소와 NodePort를 출력할 수도 있습니다:
 ```bash
 echo $(bx cs workers <your_cluster_name> | grep normal | awk '{ print $2 }' | head -1):$(kubectl get svc istio-ingress -o jsonpath={.spec.ports[0].nodePort})
-# Replace <your_cluster_name> with your cluster name. This should output your IP:NodePort e.g. 184.172.247.2:30344
+# <your_cluster_name> 을 여러분의 클러스터 이름으로 교체하십시오. 이것은 여러분의 IP:NodePort를 출력합니다. 예시. 184.172.247.2:30344
 ```
 
-Point your browser to:  
-`http://<IP:NodePort>` Replace `<IP:NodePort>` with your own IP and NodePort.
+브라우저에서 다음 주소로 접근하십시오:  
+`http://<IP:NodePort>` `<IP:NodePort>`를 고유한 IP 및 NodePort로 교체하십시오.
 
-Congratulations, you MicroProfile application is running and it should look like [this](microprofile_ui.md).
+축하합니다, 여러분의 MicroProfile 애플리케이션이 실행되어 [이것](microprofile_ui.md)과 같은 모습인 것을 볼 수 있을 것입니다.
 
-## Part B: Explore Istio resiliency features: Circuit Breakers and Fault Injection
+## 파트 B: Istio 회복 기능 알아보기: 서킷 브레이커와 실패 주입
 
-## 3. Circuit Breakers - Maximum connections and pending requests
+## 3. 서킷 브레이커 - 연결 및 요청 보류에 대한 최대 값
 
-Circuit breaking is a critical component of distributed systems. It’s nearly always better to fail quickly and apply back pressure downstream as soon as possible. Envoy enforces circuit breaking limits at the network level as opposed to having to configure and code each application independently. 
+서킷 브레이커는 분산 시스템의 매우 중요한 요소입니다. 거의 항상 빨리 실패하고 가능한 빨리 이를 흘려보내 복구하는 것이 좋습니다. Enovy는 각각의 애플리케이션에서 독립적인 설정 및 코딩을 하는 것과 달리 네트워크 레벨에서 서킷 브레이크 제한을 강제합니다.
 
-Now we will show you how to enable circuit breaker for the sample Java microservice application based on maximum connections your database can handle.
+It’s nearly always better to fail quickly and apply back pressure downstream as soon as possible.  
 
-Before we move on, we need to understand these different types of Circuit Breaker:
-- Maximum Connections: Maximum number of connections to a backend. Any excess connection will be pending in a queue. You can modify this number by changing the `maxConnections` field.
-- Maximum Pending Requests: Maximum number of pending requests to a backend. Any excess pending requests will be denied. You can modify this number by changing the `httpMaxPendingRequests` field.
+이제, 데이터 베이스가 처리 할 수 있는 최대 연결 수를 기반으로 예제 Java 마이크로 서비스 애플리케이션에 서킷 브레이커를 활성화 하는 방법을 보여주고자 합니다.
 
-Now take a look at the **circuit-breaker-db.yaml** file in manifests. We set Cloudant's maximum connections to 1 and Maximum pending requests to 1. Thus, if we sent more than 2 requests at once to cloudant, cloudant will have 1 pending request and deny any additional requests until the pending request is processed. Furthermore, it will detect any host that trigger a server error (5XX code) in the Cloudant's Envoy and eject the pod out of the load balancing pool for 15 minutes. You can visit [here](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#simplecircuitbreakerpolicy) to check out more details for each field. 
+그 전에 아래와 같은 서킷 브레이커 종류의 차이를 이해할 필요가 있습니다:
+- 최대 연결: 백엔드로 연결 가능한 최대 수. 이를 초과하는 연결은 큐(Queue)에서 대기 상태가 됩니다. `maxConnections` 필드 값을 수정하여 이 값을 조정할 수 있습니다.
+- 최대 요청 지연: 벡엔드로의 요청 지연에 대한 최대 수. 이를 초과하는 지연 요청의 경우 거부됩니다. `httpMaxPendingRequests` 필드 값을 수정하여 이 값을 조정할 수 있습니다.
+
+이제, manifests에 있는 **circuit-breaker-db.yaml** 파일을 살펴봅시다. Cloudant의 최대 연결 수를 1 그리고 최대 요청 지연 수를 1로 설정했습니다. 그렇기에, Cloudant에 한 번에 2개 이상 연결하면 clodant는 하나는 지연하고 나머지는 지연된 요청이 처리되기까지 거부하게 됩니다. 더 나아가, Cloudant의 Envoy에서 서버 오류 (5XX 코드)를 발생시키는 호스트를 탐지하고 15간 부하 분산 풀(pool)에서 해당 pod를 제거하게 됩니다. [여기](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#simplecircuitbreakerpolicy)를 방문하면 이에 대한 각각의 필드를 상세하게 알아 볼 수 있습니다. 
 
 ```yaml
 type: destination-policy
@@ -229,58 +231,60 @@ spec:
 ![circuit breaker](images/circuit_breaker.png)
 
 
-Create a circuit breaker policy on your cloudant service.
+Cloudant 서비스에 대한 서킷 브레이커 정책을 생성하십시오.
 
 ```shell
 istioctl create -f manifests/circuit-breaker-db.yaml
 ```
 
-Now point your browser to:  `http://<IP:NodePort>`, enable your **developer mode** on your browser, and click on **network**. Go to Speaker or Session and try to vote 5 times within a second. Then, you should see the last 2 to 3 vote will return a server error because there are more than one pending request get sent to cloudant. Therefore, the circuit breaker will eject the rest of the requests.
+이제 브라우저로 `http://<IP:NodePort>`를 접속하고 브라우저의 **개발자 모드**를 활성화 한 후 **네트워크** 항목을 클릭합니다. Speaker나 Session으로 이동해서 투표(vote)를 1초동안 5번 시도합니다. 그러면, Cloudant에 전해진 요청 지연 수 보다 많기 때문에 마지막 2개나 3개의 투표가 서버 오류를 얻은 것을 볼 수 있을 겁니다. 따라서, 서킷 브레이커가 나머지 요청들을 퇴출 시킵니다.
 
-> Note: using fault injection or mixer rule won't able to trigger the circuit breaker because all the traffic will be aborted/delayed before it get sent to the cloudant's Envoy.
+> 참고: 실패 주입이나 mixer 룰(rule)을 이용하는 것은 서킷 브레이커를 발동시키지 못합니다. 왜냐하면 모든 트레픽이 Cloudant Envoy에 도달하기 전에 취소되거나 지연되기 때문입니다.
 
-## 4. Circuit Breakers - Load balancing pool ejection
+## 4. 서킷 브레이커 - 부하 분산 풀 방출
 
-> Note: We will use the same circuit breaker policy from the previous step.
+> 참고: 앞 단계의 서킷 브레이커와 동일한 것을 사용하게 됩니다.
 
-A load balancing pool is a set of instances that are under the same Kubernetes service, and envoy distributes the traffic across those instances. If some of those instances are broken, the circuit breaker can eject any broken pod in your load balancing pool to avoid any further failure. To demonstrate this, create a new cloudant database instance, cloudant-db pod 2, that listens to the wrong host.
+부하 분산 풀(pool)은 같은 쿠버네티스 서비스 아래 있는 인스턴스들의 집합이며, envoy가 이 인스턴스들에 대해 트레픽을 분산합니다. 만약 이런 인스턴스 중 일부가 동작하지 않는 경우, 서킷 브레이커는 이 동작하지 않는 인스턴스들이 나중에 문제를 발생시키는 것을 피하기 위해 부하 분산 풀에서 제거할 수 있게 됩니다. 이에 대한 시연을 위해, 잘못된 호스트의 접속을 기다리는 새로운 cloudant 데이터 베이스 인스턴스(cloudant-db)를 pod 2에 생성하십시오.
 
 ```shell
 kubectl apply -f <(istioctl kube-inject -f manifests/deploy-broken-cloudant.yaml --includeIPRanges=172.30.0.0/16,172.20.0.0/16)
 ```
 
-To better test the load balancing pool ejection, you don't want the circuit breaker to eject requests for maximum connection and pending requests. Hence, remove `maxConnections: 1` and `httpMaxPendingRequests: 1` inside **manifests/circuit-breaker-db.yaml** and run
+부하 분산 풀 추출을 쉽게 테스트 하도록 
+최대 연결과 요청 지연에 대해 서킷 브레이커가 요청을 퇴출하는 것을 원하지 않을 것입니다. 따라서, **manifests/circuit-breaker-db.yaml** 에서 `maxConnections: 1` 과 `httpMaxPendingRequests: 1` 를 삭제하고 다음을 실행합니다
 
 ```shell
 istioctl replace -f manifests/circuit-breaker-db.yaml
 ```
 
-Now go to the MicroProfile example on your browser and vote on any session. Then you will see the first vote will return a 500 server error because the cloudant-db pod 2 is broken. However, the circuit breaker will detect that error and eject that broken cloudant pod out of the pool. Thus, if you keep voting within the next 15 minutes, none of that traffic will go to the broken cloudant because it won't return to the pool until 15 minutes later. 
+이제 브라우저에서 MicroProfile 예제로 접속하고 아무 Session에 투표하십시오. 그러면 cloudant-db pod 2의 오류로 첫 번째 투표에서 500 서버 에러를 발생하는 것을 볼 수 있을 겁니다. 그렇지만, 서킷 브레이커가 오류를 탐지하고 오류가 발생한 cloudant pod를 풀에서 제거합니다. 그러므로, 이후 15분이 지날 때까지 오류가 발생하는 cloudant가 풀로 되돌아가지 않으므로, 15분 동안 계속 투표해도 해당 cloudant로 가는 트래픽이 없게 됩니다.
+
 
 ![circuit breaker2](images/circuit_breaker2.png)
 
-You can double check the broken cloudant only received the traffic once. 
+단 한 번의 트래픽을 받는 것으로 오류가 발생한 Cloudant를 이중으로 확인 할 수 있습니다. 
 ```shell
 kubectl get pods # check your cloudant-db-second name
 kubectl logs cloudant-db-second-xxxxxxx-xxxxx proxy --tail=150 # You can replace 150 with the number of logs you like to display.
 ```
-As you can see, there will only be one HTTP call within the logs.
+보시다시피, 로그에는 오직 한 번의 HTTP 호출만 볼 수 있습니다.
 
-Before you move to the next step, please remove the broken cloudant and circuit breaker policy.
+다음 단계로 이동하기 전에, 오류가 발생하는 cloudant와 서킷 브레이커 정책을 삭제해 주십시오.
 ```shell
 kubectl delete -f manifests/deploy-broken-cloudant.yaml
 istioctl delete -f manifests/circuit-breaker-db.yaml
 ```
 
-## 5. Timeouts and Retries
+## 5. 타임아웃과 재시도
 
-Here's an example to demonstrate how can you add resiliency via timeouts in your application. First, we want to create a 1-second timeout to the vote service, so the vote service can stop listening if cloudant is not responding within 1-second. 
+여기는 애플리케이션에 타임아웃을 통한 회복성을 추가하는 방법을 시연하게 됩니다. 먼저, vote 서비스에 1초 타임아웃을 발생하여, cloudant 서비스가 1초 이내에 응답이 없는 경우 vote 서비스의 수신을 중단할 수 있게 합니다.
 
-Then, in order to make sure we can trigger and test this, we will inject more than 1-second delay to cloudant, so the vote service will be timeout for each response from cloudant. This process is called Fault Injection, where essentially we are introducing fault injetion.
+그러면, 이를 반드시 발생하고 테스트 할 수 있도록, 1초 이상의 지연을 cloudant에 주입하고, cloudant로 부터의 각각의 응답에 대해 타임아웃이 되도록 합니다. 이 단계는 앞으로 소개 할 실패 주입이라고 불립니다.
 
-![fault tolerance](images/fault_tolerance.png)
+![내결함성](images/fault_tolerance.png)
 
-Now take a look at the **timeout-vote** file in manifests.
+이제 manifests에 있는 **timeout-vote** 파일을 살펴 봅시다.
 ```yaml
 type: route-rule
 name: timeout
@@ -295,13 +299,13 @@ spec:
   #     perTryTimeout: 1s
 ```
 
-This rule will timeout all the responses that take more than 1 second in the vote service. You can modify `timeout` to add more time for your timeout. You also can apply retries rule by uncommenting the `httpReqRetries` section and delete/commenting out the `httpReqTimeout` section. Now, let's apply a 1-second timeout on your Vote service.
+이 룰(rule)은 vote 서비스에서 1초 보다 오래 걸리는 모든 것에 대한 응답으로 타임아웃을 발생 시킵니다. `timeout`에 값을 더해 여러분만의 타임아웃을 지정 할 수 있습니다. 또한 `httpReqRetries` 영역의 코멘트를 제거하거나 `httpReqTimeout`를 삭제 또는 코멘트 처리하는 방법으로 재시도 룰을 반영 할 수 있습니다. 이제 1-second 타임아웃을 여러분의 Vote 서비스에 적용 해 봅니다.
 
 ```shell
 istioctl create -f manifests/timeout-vote.yaml
 ```
 
-In order to test our timeout rule is working properly, we need to apply some fault injections. Thus, take a look at the **fault-injection.yaml** in manifests. 
+타임아웃 룰이 잘 동작하는지 확인하기 위해, 몇 개의 실패를 주입해야 합니다. 그러므로, manifests에 있는 **fault-injection.yaml** 를 살펴 보십시오. 
 ```yaml
 type: route-rule
 name: cloudant-delay
@@ -317,45 +321,45 @@ spec:
     #   httpStatus: 503
 ```
 
-This rule will inject a fixed 1.1-second delay on all the requests going to Cloudant. You can modify `percent` and `fixedDelay` to change the probability and the amount of time for delay. Furthermore, you can uncomment the abort section to inject some abort errors. Now let's apply a 1.1-second delay on the cloudant service to trigger your Vote service timeout.
+이 룰은 수정된 1.1-second delay를 Cloudant로 가는 모든 요청에 주입됩니다.  `percent`와 `fixedDelay`를 수정하여 지연에 대한 확률이나 시간 변경 할 수 있습니다. 더 나아가, abort 영역을 코멘트 해제하여 몇몇 오류들을 주입 할 수 있습니다. 이제, 하여 Vote 서비스 타임아웃을 발생하기 위한 1.1-second delay를  Cloudant 서비스에 반영봅시다.
 
 ```shell
 istioctl create -f manifests/fault-injection.yaml
 ```
 
-Now point your browser to:  `http://<IP:NodePort>` 
+브라우저에서 `http://<IP:NodePort>` 에 접속합니다.
 
-Next, enable your **developer mode** on your browser and click on **network**. Then, click **Vote** on the microprofile site. Now you should able to see a 504 timeout error for the GET request on `http://<IP:NodePort>/vote/rate` since cloudant needs more than one second to response back to the vote service.
+다음으로, 브라우저의 **개발자 모드**를 활성화 하고 **네트워크**를 클릭합니다. 그리고, MicroProfile 사이트에서 **Vote**를 클릭합니다. 이제 cloudant가 vote 서비스로 응답을 주는데 1초보다 더 많이 필요하기에 `http://<IP:NodePort>/vote/rate`에 대한 요청으로 504 타임아웃 에러인 것을 볼 수 있을 겁니다.
 
-# Troubleshooting
-* To delete Istio from your cluster, run the following commands in your istio directory
+# 문제 해결
+* 클러스터에서 Istio를 삭제하려면, istio 디렉토리에서 아래 명령을 실행하십시오
 ```shell
 kubectl delete -f install/kubernetes/istio-rbac-alpha.yaml # or istio-rbac-beta.yaml
 kubectl delete -f install/kubernetes/istio.yaml
 ```
-* To delete your microprofile application, run the following commands in this Github repo's main directory
+* MicroProfile 애플리케이션을 삭제하려면, Github 저장소의 main 디렉토리에서 아래 명령을 실행하십시오
 ```shell
 kubectl delete -f manifests
 ```
 
-* To delete your route rule or destination policy, run the following commands in this Github repo's main directory
+* 라우트 룰(route rule)이나 대상 정책을 삭제하려면, Github 저장소의 main 디렉토리에서 아래 명령을 실행하십시오
 ```shell
 istioctl delete -f manifests/<filename>.yaml #Replace <filename> with the rule/policy file name you want to delete.
 ```
 
-* If you have trouble with the maven build, your maven might have some dependency conflicts. Therefore, you need to purge your dependencies and rebuild your application by running the following commands
+* maven 빌드에 문제가 발생한다면, maven이 필요로하는 의존 정보가 충돌하기 때문입니다. 따라서, 기존 의존 정보를 삭제하고 아래 명령으로 애플리케이션을 다시 빌드 하십시오
 ```shell
 mvn dependency:purge-local-repository
 mvn clean package
 ```
 
-* Your microservice vote will use cloudantDB as the database, and it will initialize the database on your first POST request on the application. Therefore, when you vote on the speaker/session for your first time, please only vote once within the first 10 seconds to avoid causing a race condition on creating the new database.
+* vote 마이크로 서비스는 데이터 베이스로 cloudantDB를 사용하게 되며 애플리케이션의 첫 번째 POST 요청시 데이터 베이스를 초기화 합니다. 따라서, Speaker나 Session에 처음 투표 할 때 , 새로운 데이터 베이스를 만드는데 경쟁 조건이 발생하지 않도록 10초에 이내에 한 번만 실행하는 것을 부탁 드립니다.
 
-# References
+# 참조
 [Istio.io](https://istio.io/docs/tasks/index.html)
 
-This Java MicroProfile codebase is based on WebSphere Liberty's [Microprofile Showcase Application](https://github.com/WASdev/sample.microservicebuilder.docs)
+Java MicroProfile 코드는 WebSphere Liberty의 [Microprofile Showcase Application](https://github.com/WASdev/sample.microservicebuilder.docs)을 기반으로 하고 있습니다.
 
-# License
+# 라이센스
 [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
