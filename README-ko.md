@@ -208,7 +208,7 @@ echo $(bx cs workers <your_cluster_name> | grep normal | awk '{ print $2 }' | he
 - 최대 연결: 백엔드로 연결 가능한 최대 수. 이를 초과하는 연결은 큐(Queue)에서 대기 상태가 됩니다. `maxConnections` 필드 값을 수정하여 이 값을 조정할 수 있습니다.
 - 최대 요청 보류: 벡엔드로의 요청 보류에 대한 최대 수. 이를 초과하는 요청의 경우 거부됩니다. `httpMaxPendingRequests` 필드 값을 수정하여 이 값을 조정할 수 있습니다.
 
-이제, manifests에 있는 **circuit-breaker-db.yaml** 파일을 살펴봅시다. Cloudant의 최대 연결 수를 1 그리고 최대 요청 보류 수를 1로 설정했습니다. 그렇기에, Cloudant에 한 번에 2개 이상 연결하면 하나는 보류되고 나머지는 보류된 요청이 처리되기까지 거부됩니다. 거기에 더해, Cloudant의 Envoy에서 서버 오류 (5XX 코드)를 발생시키는 호스트를 탐지하게 되고 해당 pod를 분산 풀(pool)에서 15동안 빼놓게 됩니다. [여기](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#simplecircuitbreakerpolicy)를 방문하면 이에 대한 각각의 필드를 상세하게 알아 볼 수 있습니다. 
+이제, manifests에 있는 **circuit-breaker-db.yaml** 파일을 살펴봅시다. Cloudant의 최대 연결 수를 1 그리고 최대 요청 보류 수를 1로 설정했습니다. 그렇기에, Cloudant에 한 번에 두 개 이상 연결하면 하나는 보류되고 나머지는 보류된 요청이 처리되기까지 거부됩니다. 거기에 더해, Cloudant의 Envoy에서 서버 오류 (5XX 코드)를 발생시키는 호스트를 탐지하게 되고 해당 pod를 분산 풀(pool)에서 15분 동안 빼놓게 됩니다. [여기](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#simplecircuitbreakerpolicy)를 방문하면 이에 대한 각각의 필드를 상세하게 알아 볼 수 있습니다. 
 
 ```yaml
 type: destination-policy
@@ -235,7 +235,7 @@ Cloudant 서비스에 대한 서킷 브레이커 정책을 생성하십시오.
 istioctl create -f manifests/circuit-breaker-db.yaml
 ```
 
-이제 브라우저로 `http://<IP:NodePort>`를 접속하여 브라우저의 **개발자 모드**를 활성화 한 후 **네트워크** 항목을 클릭합니다. Speaker나 Session으로 이동해서 투표(vote)를 1초동안 5번 시도합니다. 그러면, Cloudant에 전해져 보류된 요청 수가 하나보다 많기 때문에, 마지막 두 개나 세 개의 투표가 서버 오류를 얻는 것을 볼 수 있게 됩니다. 결과적으로, 서킷 브레이커는 나머지 요청들을 제거 하게 됩니다.
+이제 브라우저로 `http://<IP:NodePort>`를 접속하여 브라우저의 **개발자 모드**를 활성화 한 후 **네트워크** 항목을 클릭합니다. Speaker나 Session으로 이동해서 투표(vote)를 1초 동안 5회 시도합니다. 그러면, Cloudant에 보내져 보류된 요청 수가 하나보다 많게 되어 마지막 2, 3개의 투표가 서버 오류를 얻게 되는 것을 볼 수 있습니다. 따라서, 해당 서킷 브레이커는 나머지 요청들을 차단하게 됩니다.
 
 > 참고: 실패 주입(fault injection)이나 mixer 규칙(rule)을 이용하는 것은 서킷 브레이커 실행을 유발하지 못합니다. 왜냐하면 모든 트래픽이 Cloudant Envoy에 도달하기 전에 취소되거나 지연되기 때문입니다.
 
@@ -243,20 +243,20 @@ istioctl create -f manifests/circuit-breaker-db.yaml
 
 > 참고: 앞 단계의 서킷 브레이커와 동일한 것을 사용하게 됩니다.
 
-부하 분산 풀(pool)은 같은 쿠버네티스 서비스 아래 있는 인스턴스들의 집합이며, Envoy가 이 인스턴스들에 대해 트래픽을 분산합니다. 만약 이런 인스턴스 중 일부가 동작하지 않는 경우, 서킷 브레이커는 이 동작하지 않는 인스턴스들이 나중에 문제를 발생시키는 것을 피하기 위해 부하 분산 풀에서 제거할 수 있습니다. 이를 시연하기 위한 잘못된 호스트의 접속을 기다리는 새로운 Cloudant 데이터 베이스 인스턴스(cloudant-db pod 2)를 생성하십시오.
+부하 분산 풀(pool)은 같은 쿠버네티스 서비스 아래 있는 인스턴스들의 집합이며, Envoy가 이 인스턴스들에 대해 트래픽을 분산합니다. 만약 이런 인스턴스 중 일부가 동작하지 않는 경우, 서킷 브레이커는 이 동작하지 않는 인스턴스들이 나중에 문제를 일으키는 것을 피하기 위해 부하 분산 풀에서 제거할 수 있습니다. 이를 시연하기 위해 잘못된 호스트를 기다리는 새로운 Cloudant 데이터 베이스 인스턴스(cloudant-db pod 2)를 생성하십시오.
 
 ```shell
 kubectl apply -f <(istioctl kube-inject -f manifests/deploy-broken-cloudant.yaml --includeIPRanges=172.30.0.0/16,172.20.0.0/16)
 ```
 
-부하 분산 풀 사출을 쉽게 테스트 하도록 
-최대 연결 및 최대 요청 보류에 대한 서킷 브레이커 기능을 원하지 않을 것입니다. 따라서, **manifests/circuit-breaker-db.yaml** 에서 `maxConnections: 1` 과 `httpMaxPendingRequests: 1` 를 삭제하고 다음을 실행합니다
+부하 분산 풀 사출을 쉽게 테스트 할 수 있도록 
+최대 연결 및 최대 요청 보류에 관한 서킷 브레이커 기능은 원하지 않을 것입니다. 따라서, **manifests/circuit-breaker-db.yaml** 에서 `maxConnections: 1` 과 `httpMaxPendingRequests: 1` 를 삭제하고 다음을 실행합니다
 
 ```shell
 istioctl replace -f manifests/circuit-breaker-db.yaml
 ```
 
-이제 브라우저에서 MicroProfile 예제로 접속하고 아무 세션(Session)에 투표(vote)하십시오. 그러면 cloudant-db pod 2의 오류로 첫 번째 투표에서 500 서버 에러를 발생하는 것을 볼 수 있게 됩니다. 그렇지만, 서킷 브레이커가 오류를 탐지하고 오류가 발생한 cloudant pod를 풀에서 제거합니다. 따라서, 이후 15분이 지날 때까지 오류가 발생하는 cloudant가 풀로 되돌아가지 않게되어 15분 동안은 계속 투표해도 해당 cloudant로 가는 트래픽이 없게 됩니다.
+이제 브라우저에서 MicroProfile 예제로 접속하여 아무 세션(Session)에 투표(vote)하십시오. 그러면, cloudant-db pod 2의 오류로 인해 첫 번째 투표에서 500 서버 에러가 발생하는 것을 볼 수 있게 됩니다. 그렇지만, 서킷 브레이커가 오류를 탐지하고 오류가 발생한 cloudant pod를 풀에서 제거하게 됩니다. 따라서, 이후 15분이 지날 때까지는 오류가 발생하는 cloudant가 풀로 되돌아가지 않게되므로, 15분 동안은 계속 투표해도 해당 cloudant로 전달되는 트래픽이 없게 됩니다.
 
 
 ![circuit breaker2](images/circuit_breaker2.png)
