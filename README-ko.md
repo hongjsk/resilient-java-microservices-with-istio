@@ -6,7 +6,7 @@
 
 Java 마이크로 서비스를 빌드하고 패키지하는 것은 이 이야기의 한 부분입니다. 이 마이크로 서비스들이 어떻게 회복 탄력성을 갖도록 할 수 있을까요? 마이크로 서비스간 헬스 체크(health check), 타임아웃, 재시도, 요청 버퍼링이나 신뢰도 높은 통신의 도입은 어떻게 할까요? 이에 대한 일부 기능이 마이크로 프레임워크에서 내장될 것이라 하지만, 특정 언어에 국한되어 있거나 이를 애플리케이션 코드에서 처리해야 하는 경우가 많습니다. 애플리케이션 코드의 변경 없이 이와 같은 기능을 도입하려면 어떻게 해야 할까요? 서비스 메쉬(service-mesh) 아키텍쳐가 이와 같은 이슈를 해결하고자 합니다. [Istio](https://istio.io)는 [컨트롤 플레인(control plane)](https://istio.io/docs/concepts/what-is-istio/overview.html#architecture)을 배포하고 대상 마이크로 서비스 옆에서 실행되는 사이드카(sidecar) 컨테이너를 주입하여 손쉽게 서비스 메쉬를 생성할 수 있도록 합니다. 
 
-이 코드에는  Istio 서비스 메쉬를 활용한 Java [MicroProfile](http://microprofile.io) 마이크로 서비스에 대한 빌드, 배포하는 방법을 시연합니다. MicroProfile은 마이크로 서비스 아키텍쳐를 위한 기초적인 Java 플랫폼이며 다중 MicroProfile 런타임에 대한 애플리케이션 이식성을 제공합니다 - 초기 베이스라인은 JAX-RS, CDI 그리고 JSON-P가 더해진 형태입니다. 이는 표준화된 방법으로 Java 마이크로 서비스를 빌드하고 패키지하기 위한 규격을 제공합니다. 
+이 코드에는  Istio 서비스 메쉬를 활용한 Java [MicroProfile](http://microprofile.io) 마이크로 서비스의 빌드 및 배포하는 방법을 시연합니다. MicroProfile은 마이크로 서비스 아키텍쳐를 위한 Java 플랫폼 베이스라인이며 다중 MicroProfile 런타임에 대한 애플리케이션 이식성을 제공합니다 - 초기 베이스라인은 JAX-RS, CDI 그리고 JSON-P가 더해진 형태입니다. 이는 표준화된 방법으로 Java 마이크로 서비스를 빌드하고 패키지하기 위한 규격을 제공합니다. 
 
 그다음에는, 애플리케이션에 대한 서킷 브레이커 (circuit breaker), 헬스 체크 그리고 타임아웃/재시도 등의 회복 탄력 기능을 어떻게 설정하고 사용하는지 보여줍니다.
 
@@ -55,7 +55,7 @@ Java MicroProfile 앱을 Bluemix에 직접 배포하고자 한다면 'Deploy to 
 ## 파트 B: Istio 회복 탄력 기능 알아보기: 서킷 브레이커와 실패 주입
 
 3. [서킷 브레이커 - 연결 및 요청 보류에 대한 최대 값](#3-서킷-브레이커---연결-및-요청-보류에-대한-최대-값)
-4. [서킷 브레이커 - 부하 분산 풀 방출](#4-서킷-브레이커---부하-분산-풀-방출)
+4. [서킷 브레이커 - 부하 분산 풀 사출](#4-서킷-브레이커---부하-분산-풀-사출)
 5. [타임아웃과 재시도](#5-타임아웃과-재시도)
 
 #### [문제 해결](#문제-해결)
@@ -208,7 +208,7 @@ echo $(bx cs workers <your_cluster_name> | grep normal | awk '{ print $2 }' | he
 - 최대 연결: 백엔드로 연결 가능한 최대 수. 이를 초과하는 연결은 큐(Queue)에서 대기 상태가 됩니다. `maxConnections` 필드 값을 수정하여 이 값을 조정할 수 있습니다.
 - 최대 요청 보류: 벡엔드로의 요청 보류에 대한 최대 수. 이를 초과하는 요청의 경우 거부됩니다. `httpMaxPendingRequests` 필드 값을 수정하여 이 값을 조정할 수 있습니다.
 
-이제, manifests에 있는 **circuit-breaker-db.yaml** 파일을 살펴봅시다. Cloudant의 최대 연결 수를 1 그리고 최대 요청 보류 수를 1로 설정했습니다. 그렇기에, Cloudant에 한 번에 2개 이상 연결하면 하나는 보류되고 나머지는 보류된 요청이 처리되기까지 거부하게 됩니다. 게다가, Cloudant의 Envoy에서 서버 오류 (5XX 코드)를 발생시키는 호스트를 탐지하고 15간 부하 분산 풀(pool)에서 해당 pod를 제거하게 됩니다. [여기](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#simplecircuitbreakerpolicy)를 방문하면 이에 대한 각각의 필드를 상세하게 알아 볼 수 있습니다. 
+이제, manifests에 있는 **circuit-breaker-db.yaml** 파일을 살펴봅시다. Cloudant의 최대 연결 수를 1 그리고 최대 요청 보류 수를 1로 설정했습니다. 그렇기에, Cloudant에 한 번에 2개 이상 연결하면 하나는 보류되고 나머지는 보류된 요청이 처리되기까지 거부됩니다. 거기에 더해, Cloudant의 Envoy에서 서버 오류 (5XX 코드)를 발생시키는 호스트를 탐지하게 되고 해당 pod를 분산 풀(pool)에서 15동안 빼놓게 됩니다. [여기](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#simplecircuitbreakerpolicy)를 방문하면 이에 대한 각각의 필드를 상세하게 알아 볼 수 있습니다. 
 
 ```yaml
 type: destination-policy
@@ -235,11 +235,11 @@ Cloudant 서비스에 대한 서킷 브레이커 정책을 생성하십시오.
 istioctl create -f manifests/circuit-breaker-db.yaml
 ```
 
-이제 브라우저로 `http://<IP:NodePort>`를 접속하고 브라우저의 **개발자 모드**를 활성화 한 후 **네트워크** 항목을 클릭합니다. Speaker나 Session으로 이동해서 투표(vote)를 1초동안 5번 시도합니다. 그러면, Cloudant에 전해진 요청 보류 수 보다 많기 때문에 마지막 2개나 3개의 투표가 서버 오류를 얻는 것을 볼 수 있게 됩니다. 그러므로, 서킷 브레이커가 나머지 요청들을 퇴출 시키게 됩니다.
+이제 브라우저로 `http://<IP:NodePort>`를 접속하여 브라우저의 **개발자 모드**를 활성화 한 후 **네트워크** 항목을 클릭합니다. Speaker나 Session으로 이동해서 투표(vote)를 1초동안 5번 시도합니다. 그러면, Cloudant에 전해져 보류된 요청 수가 하나보다 많기 때문에, 마지막 두 개나 세 개의 투표가 서버 오류를 얻는 것을 볼 수 있게 됩니다. 결과적으로, 서킷 브레이커는 나머지 요청들을 제거 하게 됩니다.
 
-> 참고: 실패 주입(fault injection)이나 mixer 규칙(rule)을 이용하는 것은 서킷 브레이커를 발동시키지 못합니다. 왜냐하면 모든 트래픽이 Cloudant Envoy에 도달하기 전에 취소되거나 지연되기 때문입니다.
+> 참고: 실패 주입(fault injection)이나 mixer 규칙(rule)을 이용하는 것은 서킷 브레이커 실행을 유발하지 못합니다. 왜냐하면 모든 트래픽이 Cloudant Envoy에 도달하기 전에 취소되거나 지연되기 때문입니다.
 
-## 4. 서킷 브레이커 - 부하 분산 풀 방출
+## 4. 서킷 브레이커 - 부하 분산 풀 사출
 
 > 참고: 앞 단계의 서킷 브레이커와 동일한 것을 사용하게 됩니다.
 
@@ -249,14 +249,14 @@ istioctl create -f manifests/circuit-breaker-db.yaml
 kubectl apply -f <(istioctl kube-inject -f manifests/deploy-broken-cloudant.yaml --includeIPRanges=172.30.0.0/16,172.20.0.0/16)
 ```
 
-부하 분산 풀 추출을 쉽게 테스트 하도록 
-최대 연결과 요청 보류에 대한 서킷 브레이커 기능을 원하지 않을 것입니다. 따라서, **manifests/circuit-breaker-db.yaml** 에서 `maxConnections: 1` 과 `httpMaxPendingRequests: 1` 를 삭제하고 다음을 실행합니다
+부하 분산 풀 사출을 쉽게 테스트 하도록 
+최대 연결 및 최대 요청 보류에 대한 서킷 브레이커 기능을 원하지 않을 것입니다. 따라서, **manifests/circuit-breaker-db.yaml** 에서 `maxConnections: 1` 과 `httpMaxPendingRequests: 1` 를 삭제하고 다음을 실행합니다
 
 ```shell
 istioctl replace -f manifests/circuit-breaker-db.yaml
 ```
 
-이제 브라우저에서 MicroProfile 예제로 접속하고 아무 Session에 투표하십시오. 그러면 cloudant-db pod 2의 오류로 첫 번째 투표에서 500 서버 에러를 발생하는 것을 볼 수 있게 됩니다. 그렇지만, 서킷 브레이커가 오류를 탐지하고 오류가 발생한 cloudant pod를 풀에서 제거합니다. 따라서, 이후 15분이 지날 때까지 오류가 발생하는 cloudant가 풀로 되돌아가지 않게되어 15분 동안은 계속 투표해도 해당 cloudant로 가는 트래픽이 없게 됩니다.
+이제 브라우저에서 MicroProfile 예제로 접속하고 아무 세션(Session)에 투표(vote)하십시오. 그러면 cloudant-db pod 2의 오류로 첫 번째 투표에서 500 서버 에러를 발생하는 것을 볼 수 있게 됩니다. 그렇지만, 서킷 브레이커가 오류를 탐지하고 오류가 발생한 cloudant pod를 풀에서 제거합니다. 따라서, 이후 15분이 지날 때까지 오류가 발생하는 cloudant가 풀로 되돌아가지 않게되어 15분 동안은 계속 투표해도 해당 cloudant로 가는 트래픽이 없게 됩니다.
 
 
 ![circuit breaker2](images/circuit_breaker2.png)
