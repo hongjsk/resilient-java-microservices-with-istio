@@ -1,16 +1,16 @@
 [![Build Status](https://travis-ci.org/IBM/resilient-java-microservices-with-istio.svg?branch=master)](https://travis-ci.org/IBM/resilient-java-microservices-with-istio)
 
-# Istio 를 활용하여 Java 애플리케이션의 향상된 장애 복구 기능을 확보하세요 
+# Istio 를 활용하여 Java 애플리케이션의 향상된 회복 탄력 기능을 확보하세요 
 
 *다른 언어로 보기: [English](README.md).*
 
-Java 마이크로 서비스를 빌드하고 패키지하는 것은 이 이야기의 한 부분입니다. 마이크로 서비스를 어떻게 장애 복구가능하게 만들 수 있을까요? 마이크로 서비스간 헬스 체크(health check), 타임아웃, 재시도, 버퍼링이나 신뢰도 높은 통신을 어떻게 도입할까요? 이에 대한 일부 기능이 마이크로 프레임워크에서 내장될 것이라 하지만, 특정 언어에 국한되어 있거나 이를 애플리케이션 코드에서 처리해야 하는 경우가 많습니다. 애플리케이션 코드의 변경 없이 이와 같은 기능을 도입하려면 어떻게 해야 할까요? 서비스 메쉬(service-mesh) 아키텍쳐가 이와 같은 이슈를 해결하고자 합니다. [Istio](https://istio.io)는 [컨트롤 플레인(control plane)](https://istio.io/docs/concepts/what-is-istio/overview.html#architecture)을 배포하고 대상 마이크로 서비스 옆에 붙는 사이드카(sidecar) 컨테이너를 주입하는 것으로 손쉽게 서비스 메쉬를 생성하게 합니다. 
+Java 마이크로 서비스를 빌드하고 패키지하는 것은 이 이야기의 한 부분입니다. 이 마이크로 서비스들이 어떻게 회복 탄력성을 갖도록 할 수 있을까요? 마이크로 서비스간 헬스 체크(health check), 타임아웃, 재시도, 요청 버퍼링이나 신뢰도 높은 통신의 도입은 어떻게 할까요? 이에 대한 일부 기능이 마이크로 프레임워크에서 내장될 것이라 하지만, 특정 언어에 국한되어 있거나 이를 애플리케이션 코드에서 처리해야 하는 경우가 많습니다. 애플리케이션 코드의 변경 없이 이와 같은 기능을 도입하려면 어떻게 해야 할까요? 서비스 메쉬(service-mesh) 아키텍쳐가 이와 같은 이슈를 해결하고자 합니다. [Istio](https://istio.io)는 [컨트롤 플레인(control plane)](https://istio.io/docs/concepts/what-is-istio/overview.html#architecture)을 배포하고 대상 마이크로 서비스 옆에서 실행되는 사이드카(sidecar) 컨테이너를 주입하여 손쉽게 서비스 메쉬를 생성할 수 있도록 합니다. 
 
-이 코드에는  Istio 서비스 메쉬를 활용한 Java [MicroProfile](http://microprofile.io) 마이크로 서비스에 대한 빌드, 배포하는 방법을 시연합니다. MicroProfile은 마이크로 서비스 아키텍쳐를 위한 기초적인 Java 플랫폼이며 여러 개의 MicroProfile 런타임에 걸친 애플리케이션 이동성을 제공합니다 - 초기 베이스라인은 JAX-RS, CDI 그리고 JSON-P가 더해진 형태입니다. 이는 표준화된 방법으로 Java 마이크로 서비스를 빌드하고 패키지하기 위한 규격을 제공합니다. 
+이 코드에는  Istio 서비스 메쉬를 활용한 Java [MicroProfile](http://microprofile.io) 마이크로 서비스에 대한 빌드, 배포하는 방법을 시연합니다. MicroProfile은 마이크로 서비스 아키텍쳐를 위한 기초적인 Java 플랫폼이며 다중 MicroProfile 런타임에 대한 애플리케이션 이식성을 제공합니다 - 초기 베이스라인은 JAX-RS, CDI 그리고 JSON-P가 더해진 형태입니다. 이는 표준화된 방법으로 Java 마이크로 서비스를 빌드하고 패키지하기 위한 규격을 제공합니다. 
 
-그리고 나면, 애플리케이션에 대한 서킷 브레이커 (circuit breaker), 헬스 체크 그리고 타임아웃/재시도 등의 장애 복구 기능을 어떻게 설정하고 사용하는지 보여줍니다.
+그다음에는, 애플리케이션에 대한 서킷 브레이커 (circuit breaker), 헬스 체크 그리고 타임아웃/재시도 등의 회복 탄력 기능을 어떻게 설정하고 사용하는지 보여줍니다.
 
-**장애 복구 기능 및 내결함성**: Istio는 애플리케이션의 어떠한 코드 변경 없이 내결함성을 추가 합니다. Istio가 지원하는 복원 기능 중 일부는 다음과 같습니다: 
+**회복 탄력 기능 및 내결함성**: Istio는 애플리케이션의 어떠한 코드 변경 없이 내결함성을 추가 합니다. Istio가 지원하는 회복 탄력 기능 중 일부는 다음과 같습니다: 
 
  - 재시도/타임아웃(retry/timeout)
  - 서킷 브레이커(circuit breaker)
@@ -18,7 +18,7 @@ Java 마이크로 서비스를 빌드하고 패키지하는 것은 이 이야기
  - 연결 풀(pool) 크기 및 요청 부하(request load) 조정
  - 시스템적인 실패 주입(fault injection)
 
-컨퍼런스 관리를 위한 예제 MicroProfile 웹 애플리케이션은 몇 개의 분리된 마이크로 서비스들로 구성되어 있습니다. 프론드엔드는 Angular로 작성되었고; 백엔드 마이크로 서비스는 Java로 되어 있습니다. 모두 쿠버네티스로 관리되는 Docker 컨테이너의 WebSphere Liberty에서 실행됩니다.
+컨퍼런스 관리를 위한 MicroProfile 웹 애플리케이션 예제는 몇 개의 분리된 마이크로 서비스들로 구성되어 있습니다. 프론드엔드는 Angular로 작성되었고; 백엔드 마이크로 서비스는 Java로 되어 있습니다. 모두 쿠버네티스로 관리되는 Docker 컨테이너의 WebSphere Liberty에서 실행됩니다.
 
 MicroProfile 내결함성 즉, Istio 기능과 함께 혹은 독립적으로 동작할 수 있는 failback 함수와 같은 애플리케이션에 특화 기능을 추가하는 것은 향후 업데이트 포함될 예정입니다.
 
@@ -52,7 +52,7 @@ Java MicroProfile 앱을 Bluemix에 직접 배포하고자 한다면 'Deploy to 
 1. [애플리케이션 코드 확보 및 빌드하기](#1-애플리케이션-코드-확보-및-빌드하기)
 2. [애플리케이션 마이크로 서비스와 Istio envoy 배포하기](#2-애플리케이션-마이크로-서비스와-istio-envoy-배포하기)
 
-## 파트 B: Istio 회복 기능 알아보기: 서킷 브레이커와 실패 주입
+## 파트 B: Istio 회복 탄력 기능 알아보기: 서킷 브레이커와 실패 주입
 
 3. [서킷 브레이커 - 연결 및 요청 보류에 대한 최대 값](#3-서킷-브레이커---연결-및-요청-보류에-대한-최대-값)
 4. [서킷 브레이커 - 부하 분산 풀 방출](#4-서킷-브레이커---부하-분산-풀-방출)
@@ -68,7 +68,7 @@ Java MicroProfile 앱을 Bluemix에 직접 배포하고자 한다면 'Deploy to 
 
 아래 지침을 수행하기 전에, [Maven](https://maven.apache.org/install.html)과 [Docker](https://www.docker.com/community-edition#/download)가 여러분 머신에 설치되어 있어야 합니다.
 
-먼저, 이 저장소를 복제하여 애플리케이션과 마이크로 서비스의 다운로드 및 빌드에 필수적인 yaml 파일 및 스크립트를 얻습니다.
+먼저, 이 저장소를 복제하여 애플리케이션과 마이크로 서비스의 다운로드 및 빌드에 필수적인 yaml 파일과 스크립트를 얻으십시오.
 
 ```shell
 git clone https://github.com/IBM/resilient-java-microservices-with-istio.git 
@@ -84,7 +84,7 @@ cd resilient-java-microservices-with-istio
 > ```
 >그러면, [단계 2](#2-deploy-application-microservices-and-istio-envoys)로 진행 할 수 있습니다.
 
-  아래 프로젝트들에 대해 각각 `git clone` 과 `mvn clean package` 를 실행합니다:
+  아래 프로젝트들에 대해 각각 `git clone` 과 `mvn clean package` 를 실행하십시오:
    * [Web-App](https://github.com/WASdev/sample.microservicebuilder.web-app)
    ```shell
       git clone https://github.com/WASdev/sample.microservicebuilder.web-app.git
@@ -105,9 +105,9 @@ cd resilient-java-microservices-with-istio
    ```shell
       git clone https://github.com/WASdev/sample.microservicebuilder.vote.git
   ```
-* 각각의 ../sample.microservicebuilder.* 프로젝트에서 `mvn clean package` 를 실행합니다.
+* 각각의 ../sample.microservicebuilder.* 프로젝트에서 `mvn clean package` 를 실행하십시오.
 
-이제, 아래 명령들을 사용하여 마이크로 서비스 컨테이너를 빌드합니다.
+이제, 아래 명령들을 사용하여 마이크로 서비스 컨테이너를 빌드하십시오.
 
 web-app 마이크로 서비스 컨테이너 빌드하기
 
@@ -149,8 +149,8 @@ docker push <docker_username>/microservice-vote-cloudant
 
 Istio의 훌륭한 기능은 애플리케이션 파일 변경 없이 Istio에 배포 할 수 있다는 점입니다. 그러나, 오리지널 MicroProfile 예제가 Fabric(쿠버네티스 위에 놓여있는 추가적인 인프라 서비스)에 구축된 예제인지라, 이 저장소에 있는 yaml 파일로 애플리케이션을 배포해야 합니다.
 
-아래 단계를 진행하기 전에, 여러분만의 고유한 docker 이미지를 사용하고자 한다면 yaml 파일에 `journeycode` 를 여러분의 docker username으로 변경해야 합니다.
->참고: **get_code** 스크립트를 실행했다면, yaml 파일에 docker username이 이미 변경되었을 겁니다.
+아래 단계를 진행하기 전에, 여러분만의 고유한 docker 이미지를 사용하고자 한다면 yaml 파일 안의 `journeycode` 를 여러분의 docker username으로 변경해야 합니다.
+>참고: **get_code** 스크립트를 실행했다면, yaml 파일에 docker username이 이미 변경되어 있을 겁니다.
 
 Envoy는 각 마이크로 서비스에 사이드카로 배치됩니다. Envoy를 마이크로 서비스에 주입한다는 것은 Envoy 사이드카가 서비스에 대한 들어오고 나가는 연결을 관리한다는 것을 의미합니다. 기존 마이크로 서비스 구성에 Envoy 사이드카를 주입하려면 다음과 같이 하십시오:
 ```shell
@@ -179,7 +179,7 @@ microservice-vote-sample-3728755778-5c4vx      2/2       Running     0          
 microservice-webapp-sample-3875068375-bvp87    2/2       Running     0          2d   
 ```
 
-애플리케이션에 접근하기 위해, 모든 마이크로 서비스로 연결하는 ingress를 생성하고 istio ingress를 통해 접근하길 원할 것입니다. 다음과 같이 실행 하십시오:
+애플리케이션에 접근하기 위해, 여러분은 모든 마이크로 서비스로 연결하는 ingress를 생성하고 istio ingress를 통해 접근하고자 할 것입니다. 다음과 같이 실행 하십시오:
 
 ```shell
 kubectl create -f manifests/ingress.yaml
@@ -196,19 +196,19 @@ echo $(bx cs workers <your_cluster_name> | grep normal | awk '{ print $2 }' | he
 
 축하합니다, 여러분의 MicroProfile 애플리케이션이 실행되어 [이것](microprofile_ui.md)과 같은 모습인 것을 볼 수 있을 것입니다.
 
-## 파트 B: Istio 회복 기능 알아보기: 서킷 브레이커와 실패 주입
+## 파트 B: Istio 회복 탄력 기능 알아보기: 서킷 브레이커와 실패 주입
 
 ## 3. 서킷 브레이커 - 연결 및 요청 보류에 대한 최대 값
 
-서킷 브레이커는 분산 시스템의 매우 중요한 요소입니다. 백엔드 다운스트림에 대한 압력는 빨리 실패하고 가능한 빨리 다시 적용하는 것이 대부분 더 좋습니다. Envoy는 각각의 애플리케이션에서 독립적인 설정 및 코딩을 하는 것과 달리 네트워크 레벨에서 서킷 브레이크 제한을 강제합니다. 
+서킷 브레이커는 분산 시스템의 매우 중요한 요소입니다. 빨리 실패하고 가능한 빠르게 백엔드에 대한 배압(back pressure downstream)을 적용하는 것이 거의 항상 더 낫습니다. Envoy는 각각의 애플리케이션에서 독립적인 설정 및 코딩을 하는 것과 달리 네트워크 레벨에서 서킷 브레이크 제한을 강제합니다. 
 
-이제, 데이터 베이스가 처리 할 수 있는 최대 연결 수를 기반으로 샘플 Java 마이크로 서비스 애플리케이션에 서킷 브레이커를 적용하는 방법을 보여주고자 합니다.
+이제, 데이터 베이스가 처리 할 수 있는 최대 연결 수를 기반으로 Java 마이크로 서비스 예제 애플리케이션에 서킷 브레이커를 적용하는 방법을 보여주고자 합니다.
 
 그전에 아래와 같은 서킷 브레이커 종류의 차이를 이해할 필요가 있습니다:
 - 최대 연결: 백엔드로 연결 가능한 최대 수. 이를 초과하는 연결은 큐(Queue)에서 대기 상태가 됩니다. `maxConnections` 필드 값을 수정하여 이 값을 조정할 수 있습니다.
-- 최대 요청 지연: 벡엔드로의 요청 지연에 대한 최대 수. 이를 초과하는 지연 요청의 경우 거부됩니다. `httpMaxPendingRequests` 필드 값을 수정하여 이 값을 조정할 수 있습니다.
+- 최대 요청 보류: 벡엔드로의 요청 보류에 대한 최대 수. 이를 초과하는 요청의 경우 거부됩니다. `httpMaxPendingRequests` 필드 값을 수정하여 이 값을 조정할 수 있습니다.
 
-이제, manifests에 있는 **circuit-breaker-db.yaml** 파일을 살펴봅시다. Cloudant의 최대 연결 수를 1 그리고 최대 요청 지연 수를 1로 설정했습니다. 그렇기에, Cloudant에 한 번에 2개 이상 연결하면 하나는 지연하고 나머지는 지연된 요청이 처리되기까지 거부하게 됩니다. 게다가, Cloudant의 Envoy에서 서버 오류 (5XX 코드)를 발생시키는 호스트를 탐지하고 15간 부하 분산 풀(pool)에서 해당 pod를 제거하게 됩니다. [여기](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#simplecircuitbreakerpolicy)를 방문하면 이에 대한 각각의 필드를 상세하게 알아 볼 수 있습니다. 
+이제, manifests에 있는 **circuit-breaker-db.yaml** 파일을 살펴봅시다. Cloudant의 최대 연결 수를 1 그리고 최대 요청 보류 수를 1로 설정했습니다. 그렇기에, Cloudant에 한 번에 2개 이상 연결하면 하나는 보류되고 나머지는 보류된 요청이 처리되기까지 거부하게 됩니다. 게다가, Cloudant의 Envoy에서 서버 오류 (5XX 코드)를 발생시키는 호스트를 탐지하고 15간 부하 분산 풀(pool)에서 해당 pod를 제거하게 됩니다. [여기](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#simplecircuitbreakerpolicy)를 방문하면 이에 대한 각각의 필드를 상세하게 알아 볼 수 있습니다. 
 
 ```yaml
 type: destination-policy
@@ -235,7 +235,7 @@ Cloudant 서비스에 대한 서킷 브레이커 정책을 생성하십시오.
 istioctl create -f manifests/circuit-breaker-db.yaml
 ```
 
-이제 브라우저로 `http://<IP:NodePort>`를 접속하고 브라우저의 **개발자 모드**를 활성화 한 후 **네트워크** 항목을 클릭합니다. Speaker나 Session으로 이동해서 투표(vote)를 1초동안 5번 시도합니다. 그러면, Cloudant에 전해진 요청 지연 수 보다 많기 때문에 마지막 2개나 3개의 투표가 서버 오류를 얻는 것을 볼 수 있게 됩니다. 그러므로, 서킷 브레이커가 나머지 요청들을 퇴출 시키게 됩니다.
+이제 브라우저로 `http://<IP:NodePort>`를 접속하고 브라우저의 **개발자 모드**를 활성화 한 후 **네트워크** 항목을 클릭합니다. Speaker나 Session으로 이동해서 투표(vote)를 1초동안 5번 시도합니다. 그러면, Cloudant에 전해진 요청 보류 수 보다 많기 때문에 마지막 2개나 3개의 투표가 서버 오류를 얻는 것을 볼 수 있게 됩니다. 그러므로, 서킷 브레이커가 나머지 요청들을 퇴출 시키게 됩니다.
 
 > 참고: 실패 주입(fault injection)이나 mixer 규칙(rule)을 이용하는 것은 서킷 브레이커를 발동시키지 못합니다. 왜냐하면 모든 트래픽이 Cloudant Envoy에 도달하기 전에 취소되거나 지연되기 때문입니다.
 
@@ -250,7 +250,7 @@ kubectl apply -f <(istioctl kube-inject -f manifests/deploy-broken-cloudant.yaml
 ```
 
 부하 분산 풀 추출을 쉽게 테스트 하도록 
-최대 연결과 요청 지연에 대한 서킷 브레이커 기능을 원하지 않을 것입니다. 따라서, **manifests/circuit-breaker-db.yaml** 에서 `maxConnections: 1` 과 `httpMaxPendingRequests: 1` 를 삭제하고 다음을 실행합니다
+최대 연결과 요청 보류에 대한 서킷 브레이커 기능을 원하지 않을 것입니다. 따라서, **manifests/circuit-breaker-db.yaml** 에서 `maxConnections: 1` 과 `httpMaxPendingRequests: 1` 를 삭제하고 다음을 실행합니다
 
 ```shell
 istioctl replace -f manifests/circuit-breaker-db.yaml
@@ -276,7 +276,7 @@ istioctl delete -f manifests/circuit-breaker-db.yaml
 
 ## 5. 타임아웃과 재시도
 
-여기는 애플리케이션에 타임아웃을 통한 회복성을 추가하는 방법을 시연하게 됩니다. 먼저, vote 서비스에 1초 타임아웃을 발생하여, cloudant 서비스가 1초 이내에 응답이 없는 경우 vote 서비스의 수신을 중단할 수 있게 합니다.
+여기는 애플리케이션에 타임아웃을 통한 회복 탄력성을 추가하는 방법을 시연하게 됩니다. 먼저, vote 서비스에 1초 타임아웃을 발생하여, cloudant 서비스가 1초 이내에 응답이 없는 경우 vote 서비스의 수신을 중단할 수 있게 합니다.
 
 그러면, 이를 반드시 발생하고 테스트 할 수 있도록, 1초 이상의 지연을 cloudant에 주입하고, cloudant로 부터의 각각의 응답에 대해 타임아웃이 되도록 합니다. 이 단계는 앞으로 소개 할 실패 주입(fault injection)이라고 불립니다.
 
