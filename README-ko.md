@@ -154,7 +154,7 @@ Istio의 훌륭한 기능은 애플리케이션 파일 변경 없이 Istio에 �
 
 Envoy는 각 마이크로 서비스에 사이드카로 배치됩니다. Envoy를 마이크로 서비스에 주입한다는 것은 Envoy 사이드카가 서비스에 대한 들어오고 나가는 연결을 관리한다는 것을 의미합니다. 기존 마이크로 서비스 구성에 Envoy 사이드카를 주입하려면 다음과 같이 하십시오:
 ```shell
-kubectl apply -f manifests/deploy-job.yaml #Create a secret for cloudant credential
+kubectl apply -f manifests/deploy-job.yaml #cloudant 신임 정보를 위한 secret을 생성합니다
 kubectl apply -f <(istioctl kube-inject -f manifests/deploy-schedule.yaml)
 kubectl apply -f <(istioctl kube-inject -f manifests/deploy-session.yaml)
 kubectl apply -f <(istioctl kube-inject -f manifests/deploy-speaker.yaml)
